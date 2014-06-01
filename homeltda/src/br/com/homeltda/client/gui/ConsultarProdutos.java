@@ -15,6 +15,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -29,13 +31,25 @@ public class ConsultarProdutos {
 	private JPanel jpCenter; 
 	private JPanel jpHeader; 
 	private JPanel jpFooter; 
+	private JMenuBar menu;
+	private Ouvinte ouvinte;
+	private JTextField txtSearch;
 	
+	public ConsultarProdutos(Ouvinte ouvinte, JMenuBar menuBar) {
+		menu = menuBar;
+		this.ouvinte = ouvinte;
+	}
+
 	public void show(){
 		createFrame();
 		createJpMain();
 		createJpHeader();
 		createJpCenter();
+		frame.setJMenuBar(menu);
+		frame.pack();
 		frame.setSize(800, 700);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		frame.show();
 	}
@@ -72,11 +86,11 @@ public class ConsultarProdutos {
 		BoxLayout box = new BoxLayout(jpSearch, BoxLayout.X_AXIS); 
 		jpSearch.setLayout(box);
 		
-		JLabel lblSearch = new JLabel("Código:");
+		JLabel lblSearch = new JLabel("Codigo:");
 		lblSearch.setFont(font);
 		
 		
-		JTextField txtSearch = new JTextField(40);
+		txtSearch = new JTextField(40);
 		txtSearch.setFont(font);
 		// add event
 		
@@ -151,15 +165,22 @@ public class ConsultarProdutos {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			if(txtSearch.getText().trim() == ""){
+				JOptionPane.showMessageDialog(null, "O campo esta em branco!");
+			}else{
+				ouvinte.pesquisa(txtSearch.getText().trim());
+			}
+			
 			
 		}
 		
 	}
-	
-	
-	public static void main(String [] args){
-		ConsultarProdutos c = new ConsultarProdutos(); 
-		c.show();
+
+	public void fechar() {
+		frame.dispose();
+		
 	}
+	
+	
+
 }
