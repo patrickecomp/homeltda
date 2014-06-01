@@ -1,23 +1,30 @@
 package br.com.homeltda.client.gui;
 
-public class Vendedor {
+import java.io.Serializable;
+
+public class Vendedor implements Serializable{
 	
 	private String nome;
-	private String loja;
+	private String rg;
 	private String cpf;
 	
-	public Vendedor(String nome, String loja, String cpf){
+	public Vendedor(String nome, String rg, String cpf){
 		this.nome = nome;
-		this.loja = loja;
+		this.rg = rg;
 		this.cpf = cpf;
 	}
 
 	public String getNome() {
 		return nome;
 	}
-
-	public String getLoja() {
-		return loja;
+	
+	@Override
+	public String toString(){
+		return nome;
+	}
+	
+	public String getRg() {
+		return rg;
 	}
 
 	public String getCpf() {

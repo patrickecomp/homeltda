@@ -1,14 +1,19 @@
 package br.com.homeltda.client.gui;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Formatter;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
+
+import br.com.homeltda.dao.Produto;
 
 public class Ouvinte extends Thread{
 	
@@ -53,7 +58,9 @@ public class Ouvinte extends Thread{
 			}
 		}
 	}
-
+	
+	/**Exemplo de como vou processar as informações enviadas do servidor. Como não foi
+	 * definido ainda como sera a resposta, isso fica de exemplo. **/
 	private void processaInformacao(String informacao) throws IOException {
 		
 		if(informacao.equals("0 RESPCONSULTA")){
@@ -79,6 +86,26 @@ public class Ouvinte extends Thread{
 		try {
 			outToServer.writeUTF("0 CONSULTA");
 			outToServer.writeUTF(produto);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void adicionaProduto(String id, String nome, String qntd, String valor){
+		int idnum = Integer.parseInt(id);
+		int qntdnum = Integer.parseInt(qntd);
+		double valornum = Double.parseDouble(valor);
+		
+		System.out.println("id: "+idnum+"qntdnum: "+qntdnum+"valornum: "+valornum);
+		Produto novo = new Produto(idnum, nome, qntdnum, valornum);
+		
+		try {
+			outToServer.writeUTF("1 INSERIR");
+			ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+			ObjectOutput oo = new ObjectOutputStream(bStream);
+			oo.writeObject(novo);
+			byte [] buf=bStream.toByteArray();
+			outToServer.write(buf);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -6,8 +6,10 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,8 @@ public class ClienteInterface {
 	private List listaVendedores;
 	private ConsultarProdutos cp;
 	private EfetivarVenda ev;
+	private AdicionarVendedor av;
+	private AdicionarProduto ap;
 	private Ouvinte ouvinte;
 	
 	private void montaTela() {
@@ -87,7 +91,7 @@ public class ClienteInterface {
         final JMenuBar menuBar = new JMenuBar();
         JMenu consultar = new JMenu("Sistema");
         JMenu venda = new JMenu("Compra");
-        JMenuItem menuItem = new JMenuItem("Consultar produto");
+        JMenuItem menuItem = new JMenuItem("Consultar Produto");
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cp = new ConsultarProdutos(ouvinte, menuBar);
@@ -95,11 +99,17 @@ public class ClienteInterface {
 				if(ev != null){
 					ev.fechar();
 				}
-				janela.dispose();
+				if(av != null){
+					av.fechar();
+				}
+				if(ap != null){
+					ap.fechar();
+				}
+				janela.setVisible(false);
             }
         });
 
-        JMenuItem menuItem2 = new JMenuItem("Efetuar venda");
+        JMenuItem menuItem2 = new JMenuItem("Efetuar Venda");
         menuItem2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ev = new EfetivarVenda(ouvinte, listaVendedores, menuBar);
@@ -107,16 +117,61 @@ public class ClienteInterface {
 				if(cp != null){
 					cp.fechar();
 				}
-				janela.dispose();
+				if(av != null){
+					av.fechar();
+				}
+				if(ap != null){
+					ap.fechar();
+				}
+				janela.setVisible(false);
             }
         });
+        final ClienteInterface ci = this;
+        JMenuItem menuItem3 = new JMenuItem("Adicionar Vendedor");
+        menuItem3.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                av = new AdicionarVendedor(ci, menuBar);
+				av.montarTela();
+				if(cp != null){
+					cp.fechar();
+				}
+				if(ev != null){
+					ev.fechar();
+				}
+				if(ap != null){
+					ap.fechar();
+				}
+				janela.setVisible(false);
+            }
+        });
+        
+        JMenuItem menuItem5 = new JMenuItem("Adicionar Produto");
+        menuItem5.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ap = new AdicionarProduto(ouvinte, menuBar);
+				ap.montarTela();
+				if(cp != null){
+					cp.fechar();
+				}
+				if(av != null){
+					av.fechar();
+				}
+				if(ev != null){
+					ev.fechar();
+				}
+				janela.setVisible(false);
+            }
+        });
+        
         consultar.add(menuItem);
+        consultar.add(menuItem3);
+        consultar.add(menuItem5);
         venda.add(menuItem2);
         JMenu sair = new JMenu("Sair");
-        JMenuItem menuItem4 = new JMenuItem("Sair do sistema");
+        JMenuItem menuItem4 = new JMenuItem("Sair do Sistema");
         menuItem4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+            	System.exit(0);
             }
         });
         sair.add(menuItem4);
@@ -128,12 +183,30 @@ public class ClienteInterface {
 		
 	}
 	
+	public void adicionaVendedor(String nome, String cpf, String rg) {
+		Vendedor novo = new Vendedor(nome, cpf, rg);
+		listaVendedores.add(novo);
+	    FileOutputStream fo;
+		try {
+			fo = new FileOutputStream(System.getProperty("user.dir") + File.separator + "vendedores" + File.separator + "vendedores.dat");
+    	    ObjectOutputStream oo = new ObjectOutputStream(fo);
+    	    oo.writeObject(listaVendedores);
+    	    oo.close();
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 
 
+	}
+	
 	public static void main(String[] args) {
 		ClienteInterface ci = new ClienteInterface();
 		ci.montaTela();
 
 	}
+
+
 	
 }

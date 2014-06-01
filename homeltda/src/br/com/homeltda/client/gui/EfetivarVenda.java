@@ -66,11 +66,21 @@ public class EfetivarVenda {
 				String produto = JOptionPane.showInputDialog("Digite o nome do produto: ");
 				String quantidade = JOptionPane.showInputDialog("Digite a quantidade: ");
 				
+				ouvinte.pesquisa(produto);
+				//continuação..
 			}
 		});
-		JButton Finalizar = new JButton("Finalizar compra");
+		JButton finalizar = new JButton("Finalizar compra");
+		finalizar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				
+				
+			}
+		});
 		flow.add(adiciona);
-		flow.add(Finalizar);
+		flow.add(finalizar);
 		painelPrincipal.add(flow, BorderLayout.SOUTH);
 		
 	}

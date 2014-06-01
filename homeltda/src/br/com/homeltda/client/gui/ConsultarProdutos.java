@@ -169,6 +169,7 @@ public class ConsultarProdutos {
 				JOptionPane.showMessageDialog(null, "O campo esta em branco!");
 			}else{
 				ouvinte.pesquisa(txtSearch.getText().trim());
+				txtSearch.setText("");
 			}
 			
 			
